@@ -1,4 +1,4 @@
-name: Build p2 and OS artifacts
+name: Rosetta P2 and OS artifacts Deployment
 
 # Controls when the workflow will run
 on:
