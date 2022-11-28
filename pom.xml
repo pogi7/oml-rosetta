@@ -10,7 +10,7 @@
 		<repository>
 		  <id>github</id>
 		  <name>GitHub opencaesar Apache Maven Packages</name>
-		  <url>https://maven.pkg.github.com/opencaesar/oml-rosetta</url>
+		  <url>https://maven.pkg.github.com/pogi7/oml-rosetta</url>
 		</repository>
 	 </distributionManagement>
 	
