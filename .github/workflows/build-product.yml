@@ -30,8 +30,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Setup Java 
-      - uses: actions/setup-java@v3
+      - name: Setup Java 
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
           # https://github.com/actions/setup-java#supported-distributions
@@ -40,10 +40,10 @@ jobs:
         # --batch-modes and --update-snapshots
       - name: Build OS binaries and p2 artifacts
         run: mvn -B -U verify
-        # ${{ github.ref }} is most recent tag name.  For workflows triggered by push, this is the branch or tag ref that was pushed.
+        # ${{ github.ref_name }} is most recent tag name.  For workflows triggered by push, this is the branch or tag ref that was pushed.
         # https://docs.github.com/en/actions/learn-github-actions/contexts
       - name: Set version
-        run: $GITHUB_WORKSPACE/setversion.sh ${{ github.ref }} && $GITHUB_WORKSPACE/io.opencaesar.rosetta.product/setversion.sh 
+        run: $GITHUB_WORKSPACE/setversion.sh ${{ github.ref_name }} && $GITHUB_WORKSPACE/io.opencaesar.rosetta.product/setversion.sh 
 
 
       - name: Deploy p2 artifacts
@@ -56,8 +56,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         with: 
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
           body: |
             Changes in this release
             - First Change
