@@ -33,11 +33,11 @@ jobs:
         id: maven-verify
         run: mvn -B -U verify
 
-      - name: Set version
+      - name: Set version [TAG]
         run: ./setversion.sh ${{ github.ref_name }} && ./io.opencaesar.rosetta.product/setversion.sh 
         if: ${{ github.ref_name == 'tag' }} # Run job on tag only
 
-      - name: Upload Artifacts and Create Github Release
+      - name: Upload Artifacts and Create Github Release [TAG]
         # ${{ github.ref_name }} is most recent tag name.  For workflows triggered by push, this is the branch or tag ref that was pushed.
         # https://docs.github.com/en/actions/learn-github-actions/contexts
         run: |
@@ -55,6 +55,6 @@ jobs:
       # TODO: Create signing step for MacOS binaries current workaround
       # xattr -cr /path/to/mac_application.app
 
-      - name: Deploy p2 artifacts 
+      - name: Deploy p2 artifacts [TAG]
         run: mvn deploy -Dgithub-update-repo=https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/pogi7/oml-rosetta-p2
         if: ${{ github.ref_name == 'tag' }} # Run job on tag only
