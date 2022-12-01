@@ -10,10 +10,11 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a two jobs called "workbench_workflow"
+  # This workflow contains a one job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -29,21 +30,16 @@ jobs:
         
         # --batch-modes and --update-snapshots
       - name: Build OS binaries and p2 artifacts
+        id: maven-verify
         run: mvn -B -U verify
-        # ${{ github.ref_name }} is most recent tag name.  For workflows triggered by push, this is the branch or tag ref that was pushed.
-        # https://docs.github.com/en/actions/learn-github-actions/contexts
-
-      - name: Cache OS binaries and p2 artifacts
-        id: cache-workbench
-        uses: actions/cache@v3
 
       - name: Set version
         run: ./setversion.sh ${{ github.ref_name }} && ./io.opencaesar.rosetta.product/setversion.sh 
-        on: 
-          push: 
-          - tags: '*' # Run job on tag only
+        if: ${{ github.ref_name == 'tag' }} # Run job on tag only
 
       - name: Upload Artifacts and Create Github Release
+        # ${{ github.ref_name }} is most recent tag name.  For workflows triggered by push, this is the branch or tag ref that was pushed.
+        # https://docs.github.com/en/actions/learn-github-actions/contexts
         run: |
           set -x
           artifacts=()
@@ -52,9 +48,7 @@ jobs:
           done
           tag_name=${{ github.ref_name }}
           hub release create "${artifacts[@]}" -m "$tag_name" "$tag_name"
-        on: 
-          push: 
-          - tags: '*' # Run job on tag only
+        if: ${{ github.ref_name == 'tag' }} # Run job on tag only
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 
@@ -63,6 +57,4 @@ jobs:
 
       - name: Deploy p2 artifacts 
         run: mvn deploy -Dgithub-update-repo=https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/pogi7/oml-rosetta-p2
-        on: 
-          push: 
-          - tags: '*' # Run job on tag only
+        if: ${{ github.ref_name == 'tag' }} # Run job on tag only
