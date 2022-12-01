@@ -20,10 +20,6 @@ jobs:
       ZIP_PRODUCTS_PATH: io.opencaesar.rosetta.product/target/products/rosetta-*
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    # Tagged Build
-    # - name: Set tag env variable
-    #   run: echo "LATEST_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -42,13 +38,17 @@ jobs:
         run: mvn -B -U verify
         # ${{ github.ref_name }} is most recent tag name.  For workflows triggered by push, this is the branch or tag ref that was pushed.
         # https://docs.github.com/en/actions/learn-github-actions/contexts
+      
       - name: Set version
-        run: $GITHUB_WORKSPACE/setversion.sh ${{ github.ref_name }} && $GITHUB_WORKSPACE/io.opencaesar.rosetta.product/setversion.sh 
+        run: ./setversion.sh ${{ github.ref_name }} && ./io.opencaesar.rosetta.product/setversion.sh 
 
 
       - name: Deploy p2 artifacts
       # settings file encodes credentials needed to write to Github
         run: mvn deploy -Prelease-composite -Dgithub-update-repo=https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/pogi7/oml-rosetta-p2
+
+      - name: Zip OS binaries
+        run: zip os-binaries ${{ env.ZIP_PRODUCTS_PATH }}
 
       - name: Create Github Release
         id: create-release     
@@ -67,10 +67,11 @@ jobs:
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          GITHUB_WORKSPACE: 
         with:
           upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_name: OS binaries
-          asset_path: ${{ env.PRODUCTS_PATH }}
+          asset_path: ./os-binaries.zip
+          asset_name: os-binaries.zip
           asset_content_type: application/zip
 
       
