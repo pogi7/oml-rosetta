@@ -42,11 +42,6 @@ jobs:
       - name: Set version
         run: ./setversion.sh ${{ github.ref_name }} && ./io.opencaesar.rosetta.product/setversion.sh 
 
-
-      - name: Deploy p2 artifacts
-      # settings file encodes credentials needed to write to Github
-        run: mvn deploy -Prelease-composite -Dgithub-update-repo=https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/pogi7/oml-rosetta-p2
-
       - name: Create Github Release
         id: create-release     
         uses: actions/create-release@v1
@@ -118,4 +113,6 @@ jobs:
       # TODO: Create signing step for MacOS binaries current workaround
       # xattr -cr /path/to/mac_application.app
 
-      
+      - name: Deploy p2 artifacts
+      # settings file encodes credentials needed to write to Github
+        run: mvn deploy -Prelease-composite -Dgithub-update-repo=https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/pogi7/oml-rosetta-p2
