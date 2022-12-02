@@ -3,7 +3,7 @@ name: workbench_workflow
 # Controls when the workflow will run
 on:
   push:
-    branches: '*' # default workflow runs for all branches
+    - '**' # default workflow runs for all branches and tags
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
