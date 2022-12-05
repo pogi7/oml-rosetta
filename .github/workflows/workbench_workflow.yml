@@ -52,11 +52,11 @@ jobs:
           hub release create "${artifacts[@]}" -m "$tag_name" "$tag_name"
         if: ${{ github.ref_type == 'tag' }} # Run job on tag only
         env:
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # TODO: Create signing step for MacOS binaries current workaround
       # xattr -cr /path/to/mac_application.app
 
       - name: Deploy p2 artifacts [TAG]
-        run: mvn deploy -Dgithub-update-repo=https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/pogi7/oml-rosetta-p2
+        run: mvn deploy -Dgithub-update-repo=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/pogi7/oml-rosetta-p2
         if: ${{ github.ref_type == 'tag' }} # Run job on tag only
