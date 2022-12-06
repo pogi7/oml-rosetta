@@ -58,5 +58,8 @@ jobs:
       # xattr -cr /path/to/mac_application.app
 
       - name: Deploy p2 artifacts [TAG]
-        run: mvn deploy -Dgithub-update-repo=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/pogi7/oml-rosetta-p2
+        run: |
+          mvn deploy 
+          -Prelease-composite
+          -Dgithub-update-repo=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/pogi7/oml-rosetta-p2
         if: ${{ github.ref_type == 'tag' }} # Run job on tag only

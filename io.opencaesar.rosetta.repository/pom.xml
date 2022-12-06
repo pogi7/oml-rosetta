@@ -59,7 +59,6 @@
 		</pluginManagement>
 	</build>
 
-  <?ignore
     <profiles>
         <profile>
            <!-- Activate this profile to perform the release to GitHub Pages -->
@@ -246,6 +245,5 @@
           </build>
         </profile>
 	</profiles>
-  ?>
 
 </project>
