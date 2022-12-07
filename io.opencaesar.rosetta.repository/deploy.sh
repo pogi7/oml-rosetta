@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git config user.name "Github Actions"
+git config user.name "pogi7"
 git config user.email "aaronlevitt7@gmail.com"
 
 # Now that we're all set up, we can push.
