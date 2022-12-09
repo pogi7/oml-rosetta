@@ -57,6 +57,12 @@ jobs:
       # TODO: Create signing step for MacOS binaries current workaround
       # xattr -cr /path/to/mac_application.app
 
+      - name: Configure Git [TAG]
+        run: |
+          git config --global user.name 'Aaron Levitt'
+          git config --global user.email 'aaronlevitt7@gmail.com'
+        if: ${{ github.ref_type == 'tag' }} # Run job on tag only
+
       - name: Deploy p2 artifacts [TAG]
-        run: mvn deploy -Prelease-composite -Dgithub-update-repo=https://x-access-token:${{ secrets.ACTIONS_TOKEN }}@github.com/pogi7/oml-rosetta-p2
+        run: mvn deploy -Prelease-composite -Dgithub-update-repo=https://x-access-token:${{ secrets.ACTIONS_TOKEN }}@github.com/pogi7/oml-rosetta-p2 -e
         if: ${{ github.ref_type == 'tag' }} # Run job on tag only
