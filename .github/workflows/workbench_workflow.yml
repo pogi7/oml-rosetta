@@ -42,17 +42,14 @@ jobs:
       - name: Upload Artifacts and Create Github Release [TAG]
         # ${{ github.ref_name }} is most recent tag name.  For workflows triggered by push, this is the branch or tag ref that was pushed.
         # https://docs.github.com/en/actions/learn-github-actions/contexts
-        run: |
-          set -x
-          artifacts=()
-          for a in ${{ env.ZIP_PRODUCTS_PATH }}; do
-            artifacts+=("-a" "$artifact")
-          done
-          tag_name=${{ github.ref_name }}
-          hub release create "${artifacts[@]}" -m "$tag_name" "$tag_name"
+        uses: softprops/action-gh-release@v1
+        name: ${{ github.ref_name }}
+        tag_name: ${{ github.ref_name }}
+        files: ${{ env.ZIP_PRODUCTS_PATH }}
         if: ${{ github.ref_type == 'tag' }} # Run job on tag only
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+          ZIP_PRODUCTS_PATH: io.opencaesar.rosetta.product/target/products/*
 
       # TODO: Create signing step for MacOS binaries current workaround
       # xattr -cr /path/to/mac_application.app
